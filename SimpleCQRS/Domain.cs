@@ -65,6 +65,7 @@ namespace SimpleCQRS
         private readonly List<Event> _changes = new List<Event>();
        
         public abstract Guid Id { get; }
+        public int Version { get; internal set; }
 
         public IEnumerable<Event> GetUncommittedChanges()
         {
@@ -115,8 +116,9 @@ namespace SimpleCQRS
 
         public T GetById(Guid id)
         {
-            var obj = new T();
-            obj.LoadsFromHistory(_storage.GetEventsForAggregate(id));
+            var obj = new T();//lots of ways to do this
+            var e = _storage.GetEventsForAggregate(id);
+            obj.LoadsFromHistory(e);
             return obj;
         }
     }

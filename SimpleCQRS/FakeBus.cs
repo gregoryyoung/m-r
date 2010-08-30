@@ -6,39 +6,42 @@ namespace SimpleCQRS
 {
     public class FakeBus : ICommandSender, IEventPublisher
     {
-        private readonly Dictionary<Type, List<object>> _routes = new Dictionary<Type, List<object>>();
+        private readonly Dictionary<Type, List<Action<Message>>> _routes = new Dictionary<Type, List<Action<Message>>>();
 
-        public void RegisterHandler<T>(Handles<T> handler) where T : Message
+        public void RegisterHandler<T>(Action<T> handler) where T : Message
         {
-            List<object> handlers;
+            List<Action<Message>> handlers;
             if(!_routes.TryGetValue(typeof(T), out handlers))
             {
-                handlers = new List<object>();
+                handlers = new List<Action<Message>>();
                 _routes.Add(typeof(T), handlers);
             }
-            handlers.Add(handler);
+            handlers.Add(DelegateAdjuster.CastArgument<Message, T>(x => handler(x)));
         }
 
         public void Send<T>(T command) where T : Command
         {
-            List<object> handlers;
+            List<Action<Message>> handlers; 
             if (_routes.TryGetValue(typeof(T), out handlers))
             {
-                if(handlers.Count != 1) throw new InvalidOperationException("cannot send to more than one handler");
-                ((Handles<T>)handlers[0]).Handle(command);
+                if (handlers.Count != 1) throw new InvalidOperationException("cannot send to more than one handler");
+                handlers[0](command);
             }
-            throw new InvalidOperationException("no handler registered");
+            else
+            {
+                throw new InvalidOperationException("no handler registered");
+            }
         }
 
         public void Publish<T>(T @event) where T : Event
         {
-            List<object> handlers;
-            if (!_routes.TryGetValue(typeof (T), out handlers)) return;
-            foreach(Handles<T> handler in handlers)
+            List<Action<Message>> handlers; 
+            if (!_routes.TryGetValue(@event.GetType(), out handlers)) return;
+            foreach(var handler in handlers)
             {
                 //dispatch on thread pool for added awesomeness
                 var handler1 = handler;
-                ThreadPool.QueueUserWorkItem(x => handler1.Handle(@event));
+                ThreadPool.QueueUserWorkItem(x => handler1(@event));
             }
         }
     }
