@@ -18,8 +18,8 @@ namespace SimpleCQRS
 
         public InventoryItemDetailsDto(Guid id, string name, int currentCount, int version)
         {
-			Id = id;
-			Name = name;
+            Id = id;
+            Name = name;
             CurrentCount = currentCount;
             Version = version;
         }
@@ -73,10 +73,12 @@ namespace SimpleCQRS
         private InventoryItemDetailsDto GetDetailsItem(Guid id)
         {
             InventoryItemDetailsDto d;
+
             if(!BullShitDatabase.details.TryGetValue(id, out d))
             {
                 throw new InvalidOperationException("did not find the original inventory this shouldnt happen");
             }
+
             return d;
         }
 
@@ -113,7 +115,7 @@ namespace SimpleCQRS
         }
     }
 
-    public static class BullShitDatabase 
+    public static class BullShitDatabase
     {
         public static Dictionary<Guid, InventoryItemDetailsDto> details = new Dictionary<Guid,InventoryItemDetailsDto>();
         public static List<InventoryItemListDto> list = new List<InventoryItemListDto>();

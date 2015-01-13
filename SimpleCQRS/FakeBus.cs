@@ -11,17 +11,20 @@ namespace SimpleCQRS
         public void RegisterHandler<T>(Action<T> handler) where T : Message
         {
             List<Action<Message>> handlers;
+
             if(!_routes.TryGetValue(typeof(T), out handlers))
             {
                 handlers = new List<Action<Message>>();
                 _routes.Add(typeof(T), handlers);
             }
+
             handlers.Add(DelegateAdjuster.CastArgument<Message, T>(x => handler(x)));
         }
 
         public void Send<T>(T command) where T : Command
         {
-            List<Action<Message>> handlers; 
+            List<Action<Message>> handlers;
+
             if (_routes.TryGetValue(typeof(T), out handlers))
             {
                 if (handlers.Count != 1) throw new InvalidOperationException("cannot send to more than one handler");
@@ -35,8 +38,10 @@ namespace SimpleCQRS
 
         public void Publish<T>(T @event) where T : Event
         {
-            List<Action<Message>> handlers; 
+            List<Action<Message>> handlers;
+
             if (!_routes.TryGetValue(@event.GetType(), out handlers)) return;
+
             foreach(var handler in handlers)
             {
                 //dispatch on thread pool for added awesomeness

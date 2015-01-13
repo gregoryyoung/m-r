@@ -63,7 +63,7 @@ namespace SimpleCQRS
     public abstract class AggregateRoot
     {
         private readonly List<Event> _changes = new List<Event>();
-       
+
         public abstract Guid Id { get; }
         public int Version { get; internal set; }
 
@@ -87,6 +87,7 @@ namespace SimpleCQRS
             ApplyChange(@event, true);
         }
 
+        // push atomic aggregate changes to local history for further processing (EventStore.SaveEvents)
         private void ApplyChange(Event @event, bool isNew)
         {
             this.AsDynamic().Apply(@event);
@@ -124,4 +125,3 @@ namespace SimpleCQRS
     }
 
 }
-
