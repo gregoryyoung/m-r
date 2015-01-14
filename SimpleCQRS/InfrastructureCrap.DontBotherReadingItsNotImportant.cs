@@ -160,7 +160,6 @@ namespace SimpleCQRS
 
         private IProperty GetProperty(string propertyName)
         {
-
             // Get the list of properties and fields for this type
             IDictionary<string, IProperty> typeProperties = GetTypeProperties(RealObject.GetType());
 
@@ -275,4 +274,3 @@ namespace SimpleCQRS
         }
     }
 }
-
