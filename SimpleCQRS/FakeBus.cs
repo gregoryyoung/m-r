@@ -18,7 +18,7 @@ namespace SimpleCQRS
                 _routes.Add(typeof(T), handlers);
             }
 
-            handlers.Add(DelegateAdjuster.CastArgument<Message, T>(x => handler(x)));
+            handlers.Add((x => handler((T)x)));
         }
 
         public void Send<T>(T command) where T : Command
