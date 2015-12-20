@@ -61,16 +61,17 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CommandHandlers.cs" />
+    <Compile Include="InventoryCommandHandlers.cs" />
     <Compile Include="Domain.cs" />
     <Compile Include="EventStore.cs" />
-    <Compile Include="FakeBus.cs" />
+    <Compile Include="CommandBus.cs" />
     <Compile Include="InfrastructureCrap.DontBotherReadingItsNotImportant.cs" />
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="Commands.cs" />
     <Compile Include="Events.cs" />
     <Compile Include="Message.cs" />
     <Compile Include="ReadModel.cs" />
+    <Compile Include="Subscription.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

@@ -16,12 +16,10 @@ namespace SimpleCQRS
         public int CurrentCount;
         public int Version;
 
-        public InventoryItemDetailsDto(Guid id, string name, int currentCount, int version)
+        public InventoryItemDetailsDto(Guid id, string name)
         {
             Id = id;
             Name = name;
-            CurrentCount = currentCount;
-            Version = version;
         }
     }
 
@@ -37,68 +35,68 @@ namespace SimpleCQRS
         }
     }
 
-    public class InventoryListView : Handles<InventoryItemCreated>, Handles<InventoryItemRenamed>, Handles<InventoryItemDeactivated>
+    public class InventoryListView : ISubscriber<InventoryItemCreated>, ISubscriber<InventoryItemRenamed>, ISubscriber<InventoryItemDeactivated>
     {
-        public void Handle(InventoryItemCreated message)
+        public void OnEvent(InventoryItemCreated message)
         {
             BullShitDatabase.list.Add(new InventoryItemListDto(message.Id, message.Name));
         }
 
-        public void Handle(InventoryItemRenamed message)
+        public void OnEvent(InventoryItemRenamed message)
         {
             var item = BullShitDatabase.list.Find(x => x.Id == message.Id);
             item.Name = message.NewName;
         }
 
-        public void Handle(InventoryItemDeactivated message)
+        public void OnEvent(InventoryItemDeactivated message)
         {
             BullShitDatabase.list.RemoveAll(x => x.Id == message.Id);
         }
     }
 
-    public class InvenotryItemDetailView : Handles<InventoryItemCreated>, Handles<InventoryItemDeactivated>, Handles<InventoryItemRenamed>, Handles<ItemsRemovedFromInventory>, Handles<ItemsCheckedInToInventory>
+    public class InventoryItemDetailView : ISubscriber<InventoryItemCreated>, ISubscriber<InventoryItemDeactivated>, ISubscriber<InventoryItemRenamed>, ISubscriber<ItemsRemovedFromInventory>, ISubscriber<ItemsCheckedInToInventory>
     {
-        public void Handle(InventoryItemCreated message)
+        public void OnEvent(InventoryItemCreated message)
         {
-            BullShitDatabase.details.Add(message.Id, new InventoryItemDetailsDto(message.Id, message.Name, 0,0));
+            BullShitDatabase.details.Add(message.Id, new InventoryItemDetailsDto(message.Id, message.Name));
         }
 
-        public void Handle(InventoryItemRenamed message)
+        public void OnEvent(InventoryItemDeactivated message)
+        {
+            BullShitDatabase.details.Remove(message.Id);
+        }
+
+        public void OnEvent(InventoryItemRenamed message)
         {
             InventoryItemDetailsDto d = GetDetailsItem(message.Id);
             d.Name = message.NewName;
             d.Version = message.Version;
         }
 
-        private InventoryItemDetailsDto GetDetailsItem(Guid id)
-        {
-            InventoryItemDetailsDto d;
-
-            if(!BullShitDatabase.details.TryGetValue(id, out d))
-            {
-                throw new InvalidOperationException("did not find the original inventory this shouldnt happen");
-            }
-
-            return d;
-        }
-
-        public void Handle(ItemsRemovedFromInventory message)
+        public void OnEvent(ItemsRemovedFromInventory message)
         {
             InventoryItemDetailsDto d = GetDetailsItem(message.Id);
             d.CurrentCount -= message.Count;
             d.Version = message.Version;
         }
 
-        public void Handle(ItemsCheckedInToInventory message)
+        public void OnEvent(ItemsCheckedInToInventory message)
         {
             InventoryItemDetailsDto d = GetDetailsItem(message.Id);
             d.CurrentCount += message.Count;
             d.Version = message.Version;
         }
 
-        public void Handle(InventoryItemDeactivated message)
+        private static InventoryItemDetailsDto GetDetailsItem(Guid id)
         {
-            BullShitDatabase.details.Remove(message.Id);
+            InventoryItemDetailsDto dto;
+
+            if (!BullShitDatabase.details.TryGetValue(id, out dto))
+            {
+                throw new InvalidOperationException("did not find the original inventory this shouldnt happen");
+            }
+
+            return dto;
         }
     }
 
@@ -117,7 +115,7 @@ namespace SimpleCQRS
 
     public static class BullShitDatabase
     {
-        public static Dictionary<Guid, InventoryItemDetailsDto> details = new Dictionary<Guid,InventoryItemDetailsDto>();
+        public static Dictionary<Guid, InventoryItemDetailsDto> details = new Dictionary<Guid, InventoryItemDetailsDto>();
         public static List<InventoryItemListDto> list = new List<InventoryItemListDto>();
     }
 }
