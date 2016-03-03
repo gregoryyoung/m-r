@@ -41,7 +41,7 @@ namespace CQRSGui
             bus.RegisterHandler<DeactivateInventoryItem>(commands.Handle);
             bus.RegisterHandler<RemoveItemsFromInventory>(commands.Handle);
             bus.RegisterHandler<RenameInventoryItem>(commands.Handle);
-            var detail = new InvenotryItemDetailView();
+            var detail = new InventoryItemDetailView();
             bus.RegisterHandler<InventoryItemCreated>(detail.Handle);
             bus.RegisterHandler<InventoryItemDeactivated>(detail.Handle);
             bus.RegisterHandler<InventoryItemRenamed>(detail.Handle);
