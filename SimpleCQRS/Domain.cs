@@ -92,6 +92,7 @@ namespace SimpleCQRS
         {
             this.AsDynamic().Apply(@event);
             if(isNew) _changes.Add(@event);
+            Version++;
         }
     }
 
@@ -113,6 +114,7 @@ namespace SimpleCQRS
         public void Save(AggregateRoot aggregate, int expectedVersion)
         {
             _storage.SaveEvents(aggregate.Id, aggregate.GetUncommittedChanges(), expectedVersion);
+            aggregate.MarkChangesAsCommitted();
         }
 
         public T GetById(Guid id)
