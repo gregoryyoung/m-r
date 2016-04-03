@@ -155,6 +155,7 @@
     <Content Include="Views\Home\CheckIn.aspx" />
     <Content Include="Views\Home\Details.aspx" />
     <Content Include="Views\Home\Index.aspx" />
+    <Content Include="Views\Home\Deactivate.aspx" />
     <Content Include="Views\Home\Remove.aspx" />
     <Content Include="Views\Shared\Error.aspx" />
     <Content Include="Web.config" />

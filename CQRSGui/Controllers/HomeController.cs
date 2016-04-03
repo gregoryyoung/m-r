@@ -57,6 +57,12 @@ namespace CQRSGui.Controllers
             return RedirectToAction("Index");
         }
 
+        public ActionResult Deactivate(Guid id)
+        {
+            ViewData.Model = _readmodel.GetInventoryItemDetails(id);
+            return View();
+        }
+
         [HttpPost]
         public ActionResult Deactivate(Guid id, int version)
         {
