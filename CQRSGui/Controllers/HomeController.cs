@@ -57,6 +57,7 @@ namespace CQRSGui.Controllers
             return RedirectToAction("Index");
         }
 
+        [HttpPost]
         public ActionResult Deactivate(Guid id, int version)
         {
             _bus.Send(new DeactivateInventoryItem(id, version));
