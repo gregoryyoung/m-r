@@ -41,18 +41,18 @@ namespace SimpleCQRS
     {
         public void Handle(InventoryItemCreated message)
         {
-            BullShitDatabase.list.Add(new InventoryItemListDto(message.Id, message.Name));
+            FakeDatabase.list.Add(new InventoryItemListDto(message.Id, message.Name));
         }
 
         public void Handle(InventoryItemRenamed message)
         {
-            var item = BullShitDatabase.list.Find(x => x.Id == message.Id);
+            var item = FakeDatabase.list.Find(x => x.Id == message.Id);
             item.Name = message.NewName;
         }
 
         public void Handle(InventoryItemDeactivated message)
         {
-            BullShitDatabase.list.RemoveAll(x => x.Id == message.Id);
+            FakeDatabase.list.RemoveAll(x => x.Id == message.Id);
         }
     }
 
@@ -60,7 +60,7 @@ namespace SimpleCQRS
     {
         public void Handle(InventoryItemCreated message)
         {
-            BullShitDatabase.details.Add(message.Id, new InventoryItemDetailsDto(message.Id, message.Name, 0,0));
+            FakeDatabase.details.Add(message.Id, new InventoryItemDetailsDto(message.Id, message.Name, 0,0));
         }
 
         public void Handle(InventoryItemRenamed message)
@@ -74,7 +74,7 @@ namespace SimpleCQRS
         {
             InventoryItemDetailsDto d;
 
-            if(!BullShitDatabase.details.TryGetValue(id, out d))
+            if(!FakeDatabase.details.TryGetValue(id, out d))
             {
                 throw new InvalidOperationException("did not find the original inventory this shouldnt happen");
             }
@@ -98,7 +98,7 @@ namespace SimpleCQRS
 
         public void Handle(InventoryItemDeactivated message)
         {
-            BullShitDatabase.details.Remove(message.Id);
+            FakeDatabase.details.Remove(message.Id);
         }
     }
 
@@ -106,16 +106,16 @@ namespace SimpleCQRS
     {
         public IEnumerable<InventoryItemListDto> GetInventoryItems()
         {
-            return BullShitDatabase.list;
+            return FakeDatabase.list;
         }
 
         public InventoryItemDetailsDto GetInventoryItemDetails(Guid id)
         {
-            return BullShitDatabase.details[id];
+            return FakeDatabase.details[id];
         }
     }
 
-    public static class BullShitDatabase
+    internal class FakeDatabase
     {
         public static Dictionary<Guid, InventoryItemDetailsDto> details = new Dictionary<Guid,InventoryItemDetailsDto>();
         public static List<InventoryItemListDto> list = new List<InventoryItemListDto>();
