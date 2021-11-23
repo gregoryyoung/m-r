@@ -1,0 +1,17 @@
+﻿@page
+@model DeactivateModel
+
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div class="form-group">
+                <input type="hidden" name="Id" asp-for="InventoryItem.Id"/>
+                <input type="hidden" name="Version" asp-for="InventoryItem.Version"/>
+                <span>Deactivate &quot;@Model.InventoryItem.Name&quot; (Version: @Model.InventoryItem.Version)</span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Deactivate" class="btn btn-danger" />
+            </div>
+        </form>
+    </div>
+</div>

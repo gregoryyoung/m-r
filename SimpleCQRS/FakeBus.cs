@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading;
-
-namespace SimpleCQRS
+﻿namespace SimpleCQRS_2
 {
     public class FakeBus : ICommandSender, IEventPublisher
     {

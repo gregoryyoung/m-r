@@ -1,0 +1,19 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Home Page</h1>
+    <h2>All items:</h2>
+    <ul>@foreach (var item in Model.InventoryItems)
+        {
+            <li>
+                <a asp-page="./Details" asp-route-id="@item.Id">Name: @item.Name</a>
+            </li>
+                
+        }
+    </ul>
+    <a asp-page="./Add">Add</a>
+</div>

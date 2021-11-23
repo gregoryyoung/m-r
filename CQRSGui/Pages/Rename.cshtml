@@ -1,0 +1,18 @@
+﻿@page
+@model RenameModel
+
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div class="form-group">
+                <input type="hidden" name="Id" asp-for="InventoryItem.Id"/>
+                <input type="hidden" name="Version" asp-for="InventoryItem.Version"/>
+                <label asp-for="InventoryItem.Name" class="control-label"></label>
+                <input asp-for="InventoryItem.Name" name="Name" class="form-control"/>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Submit" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>

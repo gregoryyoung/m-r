@@ -1,0 +1,18 @@
+﻿@page
+@model CheckInModel
+
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div class="form-group">
+                <input type="hidden" name="Id" asp-for="InventoryItem.Id"/>
+                <input type="hidden" name="Version" asp-for="InventoryItem.Version"/>
+                <label class="control-label">Number:</label>
+                <input name="Number" class="form-control"/>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Submit" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>

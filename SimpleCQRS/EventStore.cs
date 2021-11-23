@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace SimpleCQRS
+﻿namespace SimpleCQRS_2
 {
     public interface IEventStore
     {

@@ -1,5 +1,4 @@
-using System;
-namespace SimpleCQRS
+namespace SimpleCQRS_2
 {
     public class Event : Message
     {

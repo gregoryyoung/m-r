@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace SimpleCQRS
+﻿namespace SimpleCQRS_2
 {
     public interface IReadModelFacade
     {
