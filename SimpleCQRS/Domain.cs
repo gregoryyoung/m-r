@@ -53,6 +53,7 @@ namespace SimpleCQRS
         public void CheckIn(int count)
         {
             if(count <= 0) throw new InvalidOperationException("must have a count greater than 0 to add to inventory");
+            if(AvailableQty + count > MaxQty) throw new InvalidOperationException("Checked in count will exceed Max Qty");
             ApplyChange(new ItemsCheckedInToInventory(_id, count));
         }
 
