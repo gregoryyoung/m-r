@@ -80,7 +80,7 @@ namespace SimpleCQRS
 
         public InventoryItem(Guid id, string name)
         {
-            ApplyChange(new InventoryItemCreated(id, name));
+            ApplyChange(new InventoryItemCreated(id, name, MaxQty));
         }
     }
 
