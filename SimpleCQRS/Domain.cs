@@ -56,6 +56,11 @@ namespace SimpleCQRS
             if(AvailableQty + count > MaxQty) throw new InvalidOperationException("Checked in count will exceed Max Qty");
             ApplyChange(new ItemsCheckedInToInventory(_id, count));
         }
+        public void ChangeMaxQty(int count)
+        {
+            if (count <= 0) throw new InvalidOperationException("Max Qty must be larger than 0");
+            ApplyChange(new ItemsCheckedInToInventory(_id, count));
+        }
 
         public void Deactivate()
         {
