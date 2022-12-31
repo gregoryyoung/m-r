@@ -95,5 +95,18 @@ namespace CQRSGui.Controllers
             _bus.Send(new RemoveItemsFromInventory(id, number, version));
             return RedirectToAction("Index");
         }
+
+        public ActionResult ChangeMaxQty(Guid id)
+        {
+            ViewData.Model = _readmodel.GetInventoryItemDetails(id);
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult ChangeMaxQty(Guid id, int number, int version)
+        {
+            _bus.Send(new ChangeMaxQty(id, number, version));
+            return RedirectToAction("Index");
+        }
     }
 }
