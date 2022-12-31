@@ -8,6 +8,9 @@ namespace SimpleCQRS
         private bool _activated;
         private Guid _id;
 
+        public int AvailableQty { get; set; }
+        public int MaxQty { get; set; } = 5;
+
         private void Apply(InventoryItemCreated e)
         {
             _id = e.Id;
@@ -17,6 +20,21 @@ namespace SimpleCQRS
         private void Apply(InventoryItemDeactivated e)
         {
             _activated = false;
+        }
+
+        private void Apply(MaxQtyChanged e)
+        {
+            MaxQty = e.NewMaxQty;
+        }
+
+        private void Apply(ItemsCheckedInToInventory e)
+        {
+            AvailableQty += e.Count;
+        }
+
+        private void Apply(ItemsRemovedFromInventory e)
+        {
+            AvailableQty -= e.Count;
         }
 
         public void ChangeName(string newName)
