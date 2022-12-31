@@ -100,6 +100,12 @@ namespace SimpleCQRS
         {
             FakeDatabase.details.Remove(message.Id);
         }
+
+        public void Handle(MaxQtyChanged message)
+        {
+            InventoryItemDetailsDto d = GetDetailsItem(message.Id);
+            d.MaxQty = message.NewMaxQty;
+        }
     }
 
     public class ReadModelFacade : IReadModelFacade
