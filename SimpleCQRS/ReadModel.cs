@@ -13,13 +13,15 @@ namespace SimpleCQRS
     {
         public Guid Id;
         public string Name;
+        public int MaxQty;
         public int CurrentCount;
         public int Version;
 
-        public InventoryItemDetailsDto(Guid id, string name, int currentCount, int version)
+        public InventoryItemDetailsDto(Guid id, string name, int maxQty, int currentCount, int version)
         {
             Id = id;
             Name = name;
+            MaxQty = maxQty;
             CurrentCount = currentCount;
             Version = version;
         }
@@ -60,7 +62,7 @@ namespace SimpleCQRS
     {
         public void Handle(InventoryItemCreated message)
         {
-            FakeDatabase.details.Add(message.Id, new InventoryItemDetailsDto(message.Id, message.Name, 0,0));
+            FakeDatabase.details.Add(message.Id, new InventoryItemDetailsDto(message.Id, message.Name, message.MaxQty, 0,0));
         }
 
         public void Handle(InventoryItemRenamed message)
