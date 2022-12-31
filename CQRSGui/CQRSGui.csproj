@@ -151,6 +151,7 @@
     <Content Include="Scripts\MicrosoftMvcValidation.debug.js" />
     <Content Include="Scripts\MicrosoftMvcValidation.js" />
     <Content Include="Views\Home\Add.aspx" />
+    <Content Include="Views\Home\ChangeMaxQty.aspx" />
     <Content Include="Views\Home\ChangeName.aspx" />
     <Content Include="Views\Home\CheckIn.aspx" />
     <Content Include="Views\Home\Details.aspx" />

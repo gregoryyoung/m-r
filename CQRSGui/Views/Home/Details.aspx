@@ -4,10 +4,12 @@
 <h2>Details:</h2>
 Id: <%:Model.Id%><br />
 Name: <%:Model.Name%><br />
+MaxQty: <%:Model.MaxQty%><br />
 Count: <%: Model.CurrentCount %><br /><br />
 
 <%: Html.ActionLink("Rename","ChangeName", new{Id=Model.Id}) %><br />
 <%: Html.ActionLink("Deactivate","Deactivate",new{Id=Model.Id, Version=Model.Version}) %><br />
 <%: Html.ActionLink("Check in","CheckIn", new{Id=Model.Id}) %><br />
-<%: Html.ActionLink("Remove","Remove", new{Id=Model.Id,Version=Model.Version}) %>
+<%: Html.ActionLink("Remove","Remove", new{Id=Model.Id,Version=Model.Version}) %><br />
+<%: Html.ActionLink("Change Max Qty","ChangeMaxQty", new{Id=Model.Id,Version=Model.Version}) %>
 </asp:Content>

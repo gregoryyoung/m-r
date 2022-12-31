@@ -64,4 +64,17 @@ namespace SimpleCQRS
             OriginalVersion = originalVersion;
         }
     }
+    public class ChangeMaxQty : Command
+    {
+        public Guid InventoryItemId;
+        public readonly int NewMaxQty;
+        public readonly int OriginalVersion;
+
+        public ChangeMaxQty(Guid inventoryItemId, int newMaxQty, int originalVersion)
+        {
+            InventoryItemId = inventoryItemId;
+            NewMaxQty = newMaxQty;
+            OriginalVersion = originalVersion;
+        }
+    }
 }

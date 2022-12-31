@@ -8,6 +8,9 @@ namespace SimpleCQRS
         private bool _activated;
         private Guid _id;
 
+        public int AvailableQty { get; set; }
+        public int MaxQty { get; set; } = 5;
+
         private void Apply(InventoryItemCreated e)
         {
             _id = e.Id;
@@ -17,6 +20,21 @@ namespace SimpleCQRS
         private void Apply(InventoryItemDeactivated e)
         {
             _activated = false;
+        }
+
+        private void Apply(MaxQtyChanged e)
+        {
+            MaxQty = e.NewMaxQty;
+        }
+
+        private void Apply(ItemsCheckedInToInventory e)
+        {
+            AvailableQty += e.Count;
+        }
+
+        private void Apply(ItemsRemovedFromInventory e)
+        {
+            AvailableQty -= e.Count;
         }
 
         public void ChangeName(string newName)
@@ -31,11 +49,18 @@ namespace SimpleCQRS
             ApplyChange(new ItemsRemovedFromInventory(_id, count));
         }
 
-
         public void CheckIn(int count)
         {
             if(count <= 0) throw new InvalidOperationException("must have a count greater than 0 to add to inventory");
+            if(AvailableQty + count > MaxQty) throw new InvalidOperationException("Checked in count will exceed Max Qty");
             ApplyChange(new ItemsCheckedInToInventory(_id, count));
+        }
+
+        public void ChangeMaxQty(int newMaxQty)
+        {
+            if (newMaxQty <= 0) throw new InvalidOperationException("New Max Qty must be larger than 0");
+            if (newMaxQty < AvailableQty) throw new InvalidOperationException("New Max Qty cannot be less than Available Qty");
+            ApplyChange(new ItemsCheckedInToInventory(_id, newMaxQty));
         }
 
         public void Deactivate()
@@ -56,7 +81,7 @@ namespace SimpleCQRS
 
         public InventoryItem(Guid id, string name)
         {
-            ApplyChange(new InventoryItemCreated(id, name));
+            ApplyChange(new InventoryItemCreated(id, name, MaxQty));
         }
     }
 

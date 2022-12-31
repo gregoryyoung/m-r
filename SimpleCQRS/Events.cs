@@ -18,9 +18,13 @@ namespace SimpleCQRS
     public class InventoryItemCreated : Event {
         public readonly Guid Id;
         public readonly string Name;
-        public InventoryItemCreated(Guid id, string name) {
+        public readonly int MaxQty;
+
+        public InventoryItemCreated(Guid id, string name, int maxQty)
+        {
             Id = id;
             Name = name;
+            MaxQty = maxQty;
         }
     }
 
@@ -55,6 +59,17 @@ namespace SimpleCQRS
         public ItemsRemovedFromInventory(Guid id, int count) {
             Id = id;
             Count = count;
+        }
+    }
+    public class MaxQtyChanged : Event
+    {
+        public Guid Id;
+        public readonly int NewMaxQty;
+
+        public MaxQtyChanged(Guid id, int newMaxQty)
+        {
+            Id = id;
+            NewMaxQty = newMaxQty;
         }
     }
 }
