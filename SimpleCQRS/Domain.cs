@@ -49,17 +49,18 @@ namespace SimpleCQRS
             ApplyChange(new ItemsRemovedFromInventory(_id, count));
         }
 
-
         public void CheckIn(int count)
         {
             if(count <= 0) throw new InvalidOperationException("must have a count greater than 0 to add to inventory");
             if(AvailableQty + count > MaxQty) throw new InvalidOperationException("Checked in count will exceed Max Qty");
             ApplyChange(new ItemsCheckedInToInventory(_id, count));
         }
-        public void ChangeMaxQty(int count)
+
+        public void ChangeMaxQty(int newMaxQty)
         {
-            if (count <= 0) throw new InvalidOperationException("Max Qty must be larger than 0");
-            ApplyChange(new ItemsCheckedInToInventory(_id, count));
+            if (newMaxQty <= 0) throw new InvalidOperationException("New Max Qty must be larger than 0");
+            if (newMaxQty < AvailableQty) throw new InvalidOperationException("New Max Qty cannot be less than Available Qty");
+            ApplyChange(new ItemsCheckedInToInventory(_id, newMaxQty));
         }
 
         public void Deactivate()
