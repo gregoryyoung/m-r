@@ -85,14 +85,14 @@ namespace SimpleCQRS
         public void Handle(ItemsRemovedFromInventory message)
         {
             InventoryItemDetailsDto d = GetDetailsItem(message.Id);
-            d.CurrentCount -= message.Count;
+            d.CurrentCount = message.Count;
             d.Version = message.Version;
         }
 
         public void Handle(ItemsCheckedInToInventory message)
         {
             InventoryItemDetailsDto d = GetDetailsItem(message.Id);
-            d.CurrentCount += message.Count;
+            d.CurrentCount = message.Count;
             d.Version = message.Version;
         }
 
