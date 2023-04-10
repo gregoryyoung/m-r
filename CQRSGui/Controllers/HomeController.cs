@@ -1,10 +1,8 @@
-﻿using System;
-using System.Web.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using SimpleCQRS;
 
 namespace CQRSGui.Controllers
 {
-    [HandleError]
     public class HomeController : Controller
     {
         private FakeBus _bus;
