@@ -1,0 +1,11 @@
+﻿@model SimpleCQRS.InventoryItemDetailsDto
+
+@using (Html.BeginForm())
+{
+    <div>
+        @Html.Hidden("Id", Model.Id)
+        @Html.Hidden("Version", Model.Version)
+        Name: @Html.TextBox("Name") <br/>
+        <button name="submit">Submit</button>
+    </div>
+}
