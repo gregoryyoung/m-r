@@ -46,13 +46,14 @@ namespace SimpleCQRS
         public void Remove(int count)
         {
             if (count <= 0) throw new InvalidOperationException("cant remove negative count from inventory");
+            if (AvailableQty - count < 0) throw new InvalidOperationException("Cannot remove a count greater than the available quantity");
             ApplyChange(new ItemsRemovedFromInventory(_id, count));
         }
 
         public void CheckIn(int count)
         {
-            if(count <= 0) throw new InvalidOperationException("must have a count greater than 0 to add to inventory");
-            if(AvailableQty + count > MaxQty) throw new InvalidOperationException("Checked in count will exceed Max Qty");
+            if (count <= 0) throw new InvalidOperationException("must have a count greater than 0 to add to inventory");
+            if (AvailableQty + count > MaxQty) throw new InvalidOperationException("Checked in count will exceed Max Qty");
             ApplyChange(new ItemsCheckedInToInventory(_id, count));
         }
 
@@ -60,12 +61,12 @@ namespace SimpleCQRS
         {
             if (newMaxQty <= 0) throw new InvalidOperationException("New Max Qty must be larger than 0");
             if (newMaxQty < AvailableQty) throw new InvalidOperationException("New Max Qty cannot be less than Available Qty");
-            ApplyChange(new ItemsCheckedInToInventory(_id, newMaxQty));
+            ApplyChange(new MaxQtyChanged(_id, newMaxQty));
         }
 
         public void Deactivate()
         {
-            if(!_activated) throw new InvalidOperationException("already deactivated");
+            if (!_activated) throw new InvalidOperationException("already deactivated");
             ApplyChange(new InventoryItemDeactivated(_id));
         }
 
@@ -116,7 +117,7 @@ namespace SimpleCQRS
         private void ApplyChange(Event @event, bool isNew)
         {
             this.AsDynamic().Apply(@event);
-            if(isNew) _changes.Add(@event);
+            if (isNew) _changes.Add(@event);
         }
     }
 
@@ -126,7 +127,7 @@ namespace SimpleCQRS
         T GetById(Guid id);
     }
 
-    public class Repository<T> : IRepository<T> where T: AggregateRoot, new() //shortcut you can do as you see fit with new()
+    public class Repository<T> : IRepository<T> where T : AggregateRoot, new() //shortcut you can do as you see fit with new()
     {
         private readonly IEventStore _storage;
 

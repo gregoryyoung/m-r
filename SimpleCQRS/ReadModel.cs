@@ -58,11 +58,11 @@ namespace SimpleCQRS
         }
     }
 
-    public class InventoryItemDetailView : Handles<InventoryItemCreated>, Handles<InventoryItemDeactivated>, Handles<InventoryItemRenamed>, Handles<ItemsRemovedFromInventory>, Handles<ItemsCheckedInToInventory>
+    public class InventoryItemDetailView : Handles<InventoryItemCreated>, Handles<InventoryItemDeactivated>, Handles<InventoryItemRenamed>, Handles<ItemsRemovedFromInventory>, Handles<ItemsCheckedInToInventory>, Handles<MaxQtyChanged>
     {
         public void Handle(InventoryItemCreated message)
         {
-            FakeDatabase.details.Add(message.Id, new InventoryItemDetailsDto(message.Id, message.Name, message.MaxQty, 0,0));
+            FakeDatabase.details.Add(message.Id, new InventoryItemDetailsDto(message.Id, message.Name, message.MaxQty, 0, 0));
         }
 
         public void Handle(InventoryItemRenamed message)
@@ -76,7 +76,7 @@ namespace SimpleCQRS
         {
             InventoryItemDetailsDto d;
 
-            if(!FakeDatabase.details.TryGetValue(id, out d))
+            if (!FakeDatabase.details.TryGetValue(id, out d))
             {
                 throw new InvalidOperationException("did not find the original inventory this shouldnt happen");
             }
@@ -87,14 +87,14 @@ namespace SimpleCQRS
         public void Handle(ItemsRemovedFromInventory message)
         {
             InventoryItemDetailsDto d = GetDetailsItem(message.Id);
-            d.CurrentCount = message.Count;
+            d.CurrentCount -= message.Count;
             d.Version = message.Version;
         }
 
         public void Handle(ItemsCheckedInToInventory message)
         {
             InventoryItemDetailsDto d = GetDetailsItem(message.Id);
-            d.CurrentCount = message.Count;
+            d.CurrentCount += message.Count;
             d.Version = message.Version;
         }
 
@@ -107,6 +107,7 @@ namespace SimpleCQRS
         {
             InventoryItemDetailsDto d = GetDetailsItem(message.Id);
             d.MaxQty = message.NewMaxQty;
+            d.Version = message.Version;
         }
     }
 
@@ -125,7 +126,7 @@ namespace SimpleCQRS
 
     internal class FakeDatabase
     {
-        public static Dictionary<Guid, InventoryItemDetailsDto> details = new Dictionary<Guid,InventoryItemDetailsDto>();
+        public static Dictionary<Guid, InventoryItemDetailsDto> details = new Dictionary<Guid, InventoryItemDetailsDto>();
         public static List<InventoryItemListDto> list = new List<InventoryItemListDto>();
     }
 }
